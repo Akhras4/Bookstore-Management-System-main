@@ -303,6 +303,11 @@
     #book{
         display: flex;
     }
+    @media screen and (max-width: 450px) {
+        ul .other{
+            display: none;
+        }
+    }
     
     </style>
 </head>
@@ -314,7 +319,7 @@
             <ul>
                 <li><a href="#book" class="nav-link">book</a></li>
                 <li><a href="#video" class="nav-link">video</a></li>
-                <li><a href="#other" class="nav-link">other</a></li>
+                <li class="other"><a href="#other" class="nav-link">other</a></li>
             
                 <li><a href="/user/<%= userid %>/account" class="nav-link"><img src='https://avataaars.io/?avatarStyle=Circle&topType=LongHairBob&accessoriesType=Prescription01&hairColor=BrownDark&facialHairType=BeardMajestic&facialHairColor=BlondeGolden&clotheType=ShirtCrewNeck&clotheColor=Gray01&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="Profile Picture" class="profile-picture">
                     Account</a></li>
