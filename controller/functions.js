@@ -103,12 +103,13 @@ async function sendemailtoclient(email,UserName,emailtoken,PORT){
     });
 
     try {
+        const deploymentURL = "https://bookstore-management-system-book.up.railway.app";
         const info = await transporter.sendMail({
             from: '"registration-system 👻" <aboakhras4@gmail.com>',
             to: email,
             subject: "Hello ✔",
             text: `Hello ${UserName}`,
-            html: `<b>Hello ${UserName}</b> <a href="http://localhost:${PORT}/VerificationEmail?emailtoken=${emailtoken}">Verification Link</a>`
+            html: `<b>Hello ${UserName}</b> <a href="${deploymentURL}/VerificationEmail?emailtoken=${emailtoken}">Verification Link</a>` //http://localhost:${PORT}
         });
         HoldingUntileRedirect(email)
         console.log("Message sent: %s", info.messageId);
@@ -197,7 +198,7 @@ const cookieJWTAuth = (req, res, next) => {
 
 const logout=(req,res)=>{
     if(req.method==="GET"){
-        res.clearCookie('token');
+        res.clearCookie("token")
         res.redirect('/login');
     }
   
