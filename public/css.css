@@ -97,3 +97,12 @@ a .mainbox{
     margin: 0;
     padding: 2%;
 }
+@media screen and (max-width: 450px) {
+    #header h2 {
+        display: none;
+    }
+    .fullcontent{
+        display: flex;
+        flex-direction: column;
+    }
+}
