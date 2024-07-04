@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PDF</title>
+    <style>
+        * {
+        box-sizing: border-box;
+    }
+    
+    body {
+        background-image: url(https://raw.githubusercontent.com/j0hm4r/freeCodeCamp/master/responsive_web_design/landing_page/bookshop.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+    }
+    
+    #header h1, #header h2, #nav-bar h3 {
+        font-family: 'Satisfy', cursive;
+    } 
+    
+    #header h1 {
+        font-size: 60px;
+    }
+    
+    #header h2 {
+        font-size: 30px;
+    }
+    
+    #header > section {
+        color: white;
+        margin: 200px auto 50px auto;
+        text-align: center;
+        height: 505px; 
+       }
+    
+    #nav-bar {
+        overflow: hidden;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-content: center;
+        background-color: rgba(0,0,0,0.8);
+        position: fixed; 
+        z-index: 10;
+        top: 0; 
+        width: 100%; 
+    }
+    
+    #nav-bar h3 {
+        color: white;
+        padding-top: 10px;
+        font-size: 25px;
+        margin: 0;
+    }
+      
+    #nav-bar ul a {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 10px 16px;
+        text-decoration: none;
+        font-size: 20px;
+    }
+      
+    #nav-bar ul a:hover {
+        background: #ddd;
+        color: black;
+    }
+    
+    #nav-bar > ul {
+        display: flex;
+        flex-direction: row;
+        list-style: none;
+        margin: 0;
+    }
+    
+    #container {
+        width: 100%;
+        background-color: ghostwhite;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+    }
+    
+    main {
+        max-width: 950px;
+        margin: 25px auto;
+        padding: 0;
+    }
+    
+    main section {
+        margin-bottom: 30px;
+    }
+    
+    #book {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    
+    #book h2 {
+        margin-top: 0;
+    }
+    
+    #book div {
+        margin: 10px;
+        padding: 5px;
+        flex: 70%;
+        max-width: 70%;}
+    
+    #book figure {
+        border: 1px solid black;
+        border-radius: 5px;
+        margin: 10px;
+        padding: 5px;
+        flex: 30%;
+        max-width: 30%;
+    }
+    
+    #book figure img {
+        max-width: 100%;
+        display: block;
+        height: auto;
+        border-radius: 5px;
+    }
+    
+    #book figcaption {
+        padding-top: 5px;
+        font-style: italic;
+        text-align: center;
+    }
+    
+    #prime {
+        position: relative; 
+        padding-bottom: 56.25%; 
+        height: 0; 
+        overflow: hidden; 
+        max-width: 100%; 
+    }
+    
+    iframe { 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+    
+    #other {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    #items {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .item {
+        max-width: 145px;
+        margin: 5px;
+    }
+    
+    .item h4 {
+        font-size: 12px;
+    }
+    .item p {
+        font-size: 12px;
+    }
+    
+    .item figure {
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 5px;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+    .item figure img {
+        max-width: 100%;
+        display: block;
+        height: auto;
+        border-radius: 5px;
+    }
+    
+    .item figcaption {
+        padding-top: 5px;
+    }
+    
+    #other h3, #subscribe h3 {
+        text-align: center;
+    }
+    
+    #form {
+        display: flex;
+        flex-direction: row;
+        font-size: 20px;
+        align-items: baseline;
+        justify-content: center;
+    }
+    
+    #form input {
+        font-size: 20px;
+    }
+    
+    #form label, #submit, #email {
+        margin: 5px 10px;
+    }
+    
+    #email {
+        width: 50%;
+    }
+    
+    footer {
+        border-top: 3px solid black;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        margin: 15px 0;
+        padding-top: 10px;
+    }
+    
+    @media screen and (max-width: 650px) {
+        #header h2 {
+            font-size: 20px;
+        }
+        #nav-bar h3 {
+            display: none;
+        }
+        #form, #form input {
+            font-size: 16px;
+        }
+    }
+    #subscribe {
+        background-color: #f4f4f4;
+        padding: 20px;
+    }
+    
+    #subscribe h1 {
+        margin-bottom: 10px;
+    }
+    
+    #subscribe form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #subscribe form label {
+        margin-bottom: 5px;
+    }
+    
+    #subscribe form input[type="text"],
+    #subscribe form input[type="file"] {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    #subscribe form button {
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    #subscribe form button:hover {
+        background-color: #555;
+    }
+    #subscribe form textarea {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 100%;
+        min-height: 100px; 
+        box-sizing: border-box;
+    }
+    .profile-picture {
+        width: 30px;
+        height: 30px; 
+        border-radius: 50%; 
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+    .cat {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    #book{
+        display: flex;
+    }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <nav id="nav-bar">
+            <a href="#header"><img src="https://raw.githubusercontent.com/j0hm4r/freeCodeCamp/master/responsive_web_design/landing_page/open_book.png" alt="logo" id="header-img"></a>
+            <h3>The BookShop</h3>
+            <ul>
+                <li><a href="#book" class="nav-link">book</a></li>
+                <li><a href="#video" class="nav-link">video</a></li>
+                <li><a href="#other" class="nav-link">other</a></li>
+            
+                <li><a href="/user/<%= userid %>/account" class="nav-link"><img src='https://avataaars.io/?avatarStyle=Circle&topType=LongHairBob&accessoriesType=Prescription01&hairColor=BrownDark&facialHairType=BeardMajestic&facialHairColor=BlondeGolden&clotheType=ShirtCrewNeck&clotheColor=Gray01&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="Profile Picture" class="profile-picture">
+                    Account</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h1>The BookShop</h1>
+            <h2>For everything you ever wanted to read</h2>
+        </section>
+    </header>
+    <div id="container">
+        <main>
+            <section id="book">
+                <figure>
+                    <img src="https://raw.githubusercontent.com/j0hm4r/freeCodeCamp/master/responsive_web_design/landing_page/leviathan.jpg" alt="Leviathan Wakes">
+                    <figcaption>Leviathan Wakes</figcaption>
+                </figure> 
+                <div>
+                    <h2>Leviathan Wakes</h2>
+                    <p>Paperback | The Expanse | English <br>
+                        <strong>Author</strong>:  James S. A. Corey 
+                    </p>
+                    <p>Humanity has colonised the solar system - Mars, the Moon, the Asteroid Belt and beyond - but the stars are still out of our reach.</p>
+    
+                    <p>Jim Holden is an officer on an ice miner making runs from the rings of Saturn to the mining stations of the Belt. When he and his crew discover a derelict ship called the Scopuli, they suddenly find themselves in possession of a deadly secret. A secret that someone is willing to kill for, and on an unimaginable scale. War is coming to the system, unless Jim can find out who abandoned the ship and why.</p>
+                        
+                    <p>Detective Miller is looking for a girl. One girl in a system of billions, but her parents have money - and money talks. When the trail leads him to the Scopuli and Holden, they both realise this girl may hold the key to everything.</p>
+                        
+                    <p>Holden and Miller must thread the needle between the Earth government, the Outer Planet revolutionaries and secret corporations, and the odds are against them. But out in the Belt, the rules are different, and one small ship can change the fate of the universe.</p>
+                </div>
+            </section>
+            <section id="prime">
+                <h3>Now a Prime Original Series</h3>
+                <iframe id="video" src="https://www.youtube.com/embed/M0QwBp_da28" allowfullscreen></iframe>
+            </section>
+            <section id="other">
+                <h3>If you liked <em>Leviathan Wakes</em>, you might also like:</h3>
+                <div id="items">
+                    <div class="item">
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/j0hm4r/freeCodeCamp/master/responsive_web_design/landing_page/expanse2.jpg" alt="Caliban&apos;s War">
+                            <figcaption>
+                                <h4>Caliban&apos;s War</h4>
+                                <p>by James S. A. Corey</p>
+                                <p>The second book in the New York Times bestselling Expanse series. </p>
+                            </figcaption>
+                        </figure> 
+                    </div>
+                    <div class="item">
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/j0hm4r/freeCodeCamp/master/responsive_web_design/landing_page/expanse3.jpg" alt="Abaddon&apos;s Gate">
+                            <figcaption>
+                                <h4>Abaddon&apos;s Gate</h4>
+                                <p>by James S. A. Corey</p>
+                                <p>The third book in the New York Times bestselling Expanse series. </p>
+                            </figcaption>
+                        </figure> 
+                    </div>
+                    <div class="item">
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/j0hm4r/freeCodeCamp/master/responsive_web_design/landing_page/expanse4.jpg" alt="Cibola Burn">
+                            <figcaption>
+                                <h4>Cibola Burn</h4>
+                                <p>by James S. A. Corey</p>
+                                <p>The fourth book in the New York Times bestselling Expanse series. </p>
+                            </figcaption>
+                        </figure> 
+                    </div>
+                    <div class="item">
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/j0hm4r/freeCodeCamp/master/responsive_web_design/landing_page/expanse5.jpg" alt="Nemesis Games">
+                            <figcaption>
+                                <h4>Nemesis Games</h4>
+                                <p>by James S. A. Corey</p>
+                                <p>The fifth book in the New York Times bestselling Expanse series. </p>
+                            </figcaption>
+                        </figure> 
+                    </div>
+                    <div class="item">
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/j0hm4r/freeCodeCamp/master/responsive_web_design/landing_page/dune.jpg" alt="Dune">
+                            <figcaption>
+                                <h4>Dune</h4>
+                                <p>by Frank Herbert</p>
+                                <p>Widely considered one of the greatest science fiction novels ever written.</p>
+                            </figcaption>
+                        </figure> 
+                    </div>
+                    <% for (i=0;i<books.length;i++){ %>
+                    <div class="item">
+                        <figure>
+                        <a href="/user/<%= userid %>/<%= books[i].pdfPath %>"target="_blank">
+                            <img src="<%= books[i].imagePath %>" alt="<%= books[i].title %>">
+                            <figcaption>
+                                <h4><%= books[i].title  %></h4>
+                                <p><%=books[i].title   %></p>
+                                <p class="cut"><%= books[i].description %> </p>
+                            </figcaption>
+                             </a>
+                        </figure> 
+                    </div>
+                    <% } %>
+                </div>
+            </section>
+            <section id="subscribe">
+                <h1><%=userid%></h1>
+                <h3>Upload a Your PDF book</h3>
+                <form action="/user/<%= userid %>/upload" method="post" enctype="multipart/form-data">
+                  <label for="title">Title</label>
+                  <input id="title" type="text"name="title">
+                  <label for="description">Description:</label>
+                  <textarea id="description" name="description"></textarea>
+                  <label for="pdf">PDF File:</label>
+                    <input type="file" name="pdf" required>
+                    <label for="image">Image File:</label>
+                    <input type="file" name="image" required>
+                    <button type="submit">Upload</button>
+                </form>
+                <% if(errors) { %>
+                    <%= errors %>
+                        <% } %>
+            </section>
+        </main>
+        <footer>
+            <div>&copy; 2024 Adulrahman Akhras & Mahtab Mardanii</div>
+            <div>Contact</div>
+            <div>Privacy | Terms</div>
+        </footer>
+    </div>
+    
+</body>
+
+</html>

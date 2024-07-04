@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rename PDF</title>
+</head>
+<body>
+<h1>Rename PDF</h1>
+<form action="/rename/<%= filename %>" method="post">
+  <input type="text" name="newFilename" value="<%= filename %>" required>
+  <button type="submit">Rename</button>
+</form>
+</body>
+</html>

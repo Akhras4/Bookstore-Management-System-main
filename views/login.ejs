@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+    <div class="fullcontent">
+        <div class="headings">
+            <h1>My Book Store</h1>
+            <h2>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem minima libero, quisquam voluptates reprehenderit quia! Sit vel vero officiis doloribus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat ea nisi facere earum optio eos dolorum ipsam, quae nemo incidunt!</h2>
+        </div>
+        <div class="formbox">
+            <h3>Log In</h3>
+            <form id="form" action="/login" method="post">
+                <label for="Email">Email</label>
+                <input type="text" name="email" class="asd"/>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="Password" class="asd"/>
+                <input id="btn" type="submit" name="submit" value="Log In" class="mainbox">
+                <label for="">New customer?</label>
+                <a href="/signup" class="mainbox">Register Now</a>
+                <% if (errors) { %>
+                    <%= errors %>
+                <% } %>
+            </form>	
+        </div>
+    </div>
+    
+</body>
+</html>

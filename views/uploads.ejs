@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Uploaded PDFs</title>
+</head>
+<body>
+<h1>Uploaded PDFs</h1>
+<ul>
+  <% files.forEach(file => { %>
+    <li>
+      <%= file %>
+      - <a href="/user/<%= userid %>/pdfs/<%= file %>" target="_blank">View</a>
+      - <a href="/user/<%= userid%>/rename/<%= file %>">Rename</a>
+      - <a href="/user/<%= userid %>/download/<%= file %>">Download</a>
+      - <a href="/user/<%= userid %>/delete/<%= file %>" onclick="return confirm('Are you sure?');">Delete</a>
+    </li>
+  <% }); %>
+</ul>
+<a href="/">Upload More PDFs</a>
+</body>
+</html>

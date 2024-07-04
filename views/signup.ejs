@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+    <div class="fullcontent">
+        <div class="headings">
+            <h1>My Book Store</h1>
+            <h2>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem minima libero, quisquam voluptates reprehenderit quia! Sit vel vero officiis doloribus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat ea nisi facere earum optio eos dolorum ipsam, quae nemo incidunt!</h2>
+        </div>
+        <div class="formbox">
+            <h3>Signup</h3>
+            <form id="form" action="/signup" method="post">
+                <label for="username">Username</label>
+                <input id="username" type="text" name="UserName"class="asd">
+                <label for="email">Email</label>
+                <input id="email" type="email" name="email" class="asd">
+                <label for="password">Password</label>
+                <input id="password" type="password" name="Password" class="asd">
+                <label for="phoneNumber">Phone Number</label>
+                <input id="phoneNumber" type="text" name="phoneNumber" class="asd">
+                <input id="btn" type="submit" value="Register Now" class="mainbox">
+                <label for="">already have account</label>
+                <a href="/login" class="mainbox">LogIn</a>
+            </form>
+            <% if (errors) { %>
+                <ul>
+                    <% Object.keys(errors).forEach(key => { %>
+                        <li><%= errors[key] %></li>
+                    <% }); %>
+                </ul>
+            <% } %>	
+        </div>
+    </div>
+    
+</body>
+</html>
