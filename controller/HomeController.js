@@ -35,7 +35,7 @@ const HomeController = {
      const userid = req.params.id;
      const { title, description } = req.body;
      const pdfPath = req.files['pdf'][0].path
-     const baseUrl = `http://localhost:${PORT}`
+     const baseUrl = `https://bookstore-management-system-book.up.railway.app`
      const imagePath= req.files['image'][0].path.replace(/\\/g, '/')
      const imageUrl = baseUrl + '/' + imagePath;
      console.log(req.files)
