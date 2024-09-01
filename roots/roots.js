@@ -61,7 +61,6 @@ const upload = multer({
 
 router.get(`/user/:id`,DoThis.cookieJWTAuth, HomeController.index);
 router.post(`/user/:id/upload`,DoThis.cookieJWTAuth, upload.fields([{ name: 'pdf', maxCount: 1 }, { name: 'image', maxCount: 1 }]), HomeController.upload);
-router.get(`/user/:id/public/pdfs/:pdfPath`,DoThis.cookieJWTAuth, HomeController.openPdf);
 router.get(`/user/:id/delete/:bookid`,DoThis.cookieJWTAuth, HomeController.delete);
 router.get(`/user/:id/download/:filename`,DoThis.cookieJWTAuth, HomeController.download);
 router.get(`/user/:id/rename/:filename`,DoThis.cookieJWTAuth, HomeController.renameForm);
