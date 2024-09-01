@@ -1,24 +1,17 @@
-
 const fs = require('fs-extra');
 const path = require('path');
+const AWS = require('aws-sdk');
 const users = require("../models/user");
 const books = require("../models/book");
 require('dotenv').config();
-const AWS = require('aws-sdk');
 
-const PDF_FOLDER = path.join(__dirname, '..', 'public', 'pdfs');
-const IMAGES_FOLDER = path.join(__dirname, '..', 'public', 'images');
-const PORT = process.env.PORT ;
-
-
-/* This code snippet defines a JavaScript object named `HomeController` which contains several methods
-for handling different routes and actions in a web application. Here is a breakdown of what each
-method does: */
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_REGION
 });
+
+
 const HomeController = {
   index: (req, res) => {
     const userid = req.params.id;
@@ -27,7 +20,7 @@ const HomeController = {
         books.find({})
           .then(books => {
             console.log(req.files);
-            res.render(`index`, { userid, books, errors: null, username: user.UserName });
+            res.render('index', { userid, books, errors: null, username: user.UserName });
           })
           .catch(err => {
             res.render('index', { userid, books });
@@ -49,26 +42,26 @@ const HomeController = {
         const { title, description } = req.body;
         const pdfFile = req.files['pdf'][0];
         const imageFile = req.files['image'][0];
+        
         const pdfUploadParams = {
           Bucket: process.env.AWS_S3_BUCKET_NAME,
           Key: `pdfs/${pdfFile.filename}`, 
           Body: fs.createReadStream(pdfFile.path),
-          ContentType: pdfFile.mimetype,
-          ACL: 'public-read' 
+          ContentType: pdfFile.mimetype
         };
-
+  
         const imageUploadParams = {
           Bucket: process.env.AWS_S3_BUCKET_NAME,
-          Key: `images/${imageFile.filename}`, // Key defines the file path in S3
+          Key: `images/${imageFile.filename}`, 
           Body: fs.createReadStream(imageFile.path),
-          ContentType: imageFile.mimetype,
-          ACL: 'public-read'
+          ContentType: imageFile.mimetype
         };
+  
         s3.upload(pdfUploadParams).promise()
           .then(pdfData => {
-            // Upload Image to S3
+            const pdfUrl = `${process.env.AWS_S3_URL}/pdfs/${pdfFile.filename}`;
             return s3.upload(imageUploadParams).promise()
-              .then(imageData => ({ pdfUrl: pdfData.Location, imageUrl: imageData.Location }));
+              .then(imageData => ({ pdfUrl, imageUrl: imageData.Location }));
           })
           .then(({ pdfUrl, imageUrl }) => {
             const newbook = new books({
@@ -99,65 +92,109 @@ const HomeController = {
     }
   },
 
-openPdf: (req, res) => {
-  try {
-    const pdfPath = req.params.pdfPath;
-    const fullPath = path.join(__dirname, '..', 'public', 'pdfs', pdfPath);    
-    res.sendFile(fullPath);
-  } catch (error) {
-    console.error(error);
-    res.status(404).send('File not found');
-  }
+  openPdf: (req, res) => {
+    const pdfKey = req.params.pdfPath;
+    console.log(`Fetching PDF with key: ${pdfKey}`);
+
+    const params = {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: `pdfs/${pdfKey}`, 
+        Expires: 60 
+    };
+    s3.getSignedUrl('getObject', params, (err, url) => {
+        if (err) {
+            console.error('Error generating presigned URL:', err);
+            return res.status(500).send('Error generating URL');
+        }
+        res.redirect(url);
+    });
 },
+
   delete: async (req, res) => {
     try {
       const userid = req.params.id;
       const bookid = req.params.bookid;
-      let filePath;
-      let imgPath;
-      console.log(bookid)
-      users.findOne({_id:userid})
-      .populate("books")
-      .then(user=>{ 
-             const index =user.books.findIndex(book => book._id.toString() === bookid);
-             filePath = user.books[index].pdfPath;
-             imgPath= user.books[index].imagePath;
-             user.books.splice(index, 1);
-             return user.save()})
-      .then(()=>{  books.deleteOne({_id:bookid})})
-      .then(()=> { const filename = path.basename(filePath); fs.unlink(path.join(PDF_FOLDER, filename))
-                   const filenameimg = path.basename(imgPath); fs.unlink(path.join(IMAGES_FOLDER, filenameimg)) })           
-       .then(()=>{  res.redirect(`/user/${ userid }/account`)})
+  
+      const user = await users.findOne({ _id: userid }).populate('books');
+      const book = user.books.find(book => book._id.toString() === bookid);
+  
+      if (!book) {
+        throw new Error('Book not found');
+      }
+  
+      const pdfKey = `pdfs/${path.basename(new URL(book.pdfPath).pathname)}`;
+      const imageKey = `images/${path.basename(new URL(book.imagePath).pathname)}`;
+  
+
+      await books.deleteOne({ _id: bookid });
+  
+
+      user.books = user.books.filter(book => book._id.toString() !== bookid);
+      await user.save();
+  
+
+      await s3.deleteObject({ Bucket: process.env.AWS_S3_BUCKET_NAME, Key: pdfKey }).promise();
+      await s3.deleteObject({ Bucket: process.env.AWS_S3_BUCKET_NAME, Key: imageKey }).promise();
+  
+      res.redirect(`/user/${userid}/account`);
     } catch (err) {
+      console.error('Delete error:', err);
       res.status(500).send(err.message);
     }
   },
+
   download: (req, res) => {
-    const { filename } = req.params;
-    res.download(path.join(PDF_FOLDER, filename));
+    const filename = req.params.filename; 
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: `pdfs/${filename}`
+    };
+    s3.getObject(params, (err, data) => {
+      if (err) {
+        console.error('Error fetching file from S3:', err);
+        res.status(404).send('File not found');
+      } else {
+        res.attachment(filename);
+        res.send(data.Body);
+      }
+    });
   },
+
   renameForm: async (req, res) => {
     const userid = req.params.id;
     const { filename } = req.params;
-    res.render('rename', { filename,  userid });
+    res.render('rename', { filename, userid });
   },
-
 
   rename: async (req, res) => {
     const userid = req.params.id;
     const { oldFilename } = req.params;
     const newFilename = req.body.newFilename;
-    const oldPath = path.join(PDF_FOLDER, oldFilename);
-    const newPath = path.join(PDF_FOLDER, newFilename);
+    const oldKey = `pdfs/${oldFilename}`;
+    const newKey = `pdfs/${newFilename}`;
 
     try {
-      await fs.rename(oldPath, newPath);
-      res.redirect(`/user/${ userid }/uploads`);
+      // Copy old file to new location
+      const copyParams = {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        CopySource: `${process.env.AWS_S3_BUCKET_NAME}/${oldKey}`,
+        Key: newKey
+      };
+      await s3.copyObject(copyParams).promise();
+
+
+      const deleteParams = {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: oldKey
+      };
+      await s3.deleteObject(deleteParams).promise();
+
+      res.redirect(`/user/${userid}/uploads`);
     } catch (err) {
+      console.error('Rename error:', err);
       res.status(500).send(err.message);
     }
   },
 };
-
 
 module.exports = HomeController;

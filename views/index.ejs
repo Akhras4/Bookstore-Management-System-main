@@ -422,7 +422,7 @@
                     <% for (i=0;i<books.length;i++){ %>
                     <div class="item">
                         <figure>
-                        <a href="/user/<%= userid %>/<%= books[i].pdfPath %>"target="_blank">
+                        <a href="<%= books[i].pdfPath %>"target="_blank">
                             <img src="<%= books[i].imagePath %>" alt="<%= books[i].title %>">
                             <figcaption>
                                 <h4><%= books[i].title  %></h4>
